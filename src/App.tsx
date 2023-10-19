@@ -8,16 +8,32 @@ let currencyFormat = new Intl.NumberFormat('en-US', {
 });
 
 function App() {
+  const baseGeneral = JSON.parse(window.localStorage.getItem('general') as any ?? '{}')
+  const baseExpenses = JSON.parse(window.localStorage.getItem('expenses') as any ?? '{}')
+
   const [expenses, setExpenses] = useState<{
     [index: string]: string;
-  }>({});
+  }>(baseExpenses);
   const [tabName, setTabName] = useState("goals");
 
   const [newExpenseName, setNewExpenseName] = useState("");
   const [newExpenseAmount, setNewExpenseAmount] = useState("");
 
+  const [goalBalance, setGoalBalance] = useState(baseGeneral.goalBalance ?? '')
+  const [goalTimeframe, setGoalTimeframe] = useState(baseGeneral.goalTimeframe ?? '')
+
   const expenseField = createRef<HTMLInputElement>();
   const expenseAmountField = createRef<HTMLInputElement>();
+
+  const saveGeneral = () => {
+    window.localStorage.setItem('general', JSON.stringify({
+      goalBalance, goalTimeframe
+    }))
+  }
+
+  const saveExpenses = (newData: any) => {
+    window.localStorage.setItem('expenses', JSON.stringify(newData))
+  }
 
   useEffect(() => {
     const onScroll = () => {
@@ -51,6 +67,7 @@ function App() {
     newData[name] = value;
 
     setExpenses(newData);
+    saveExpenses(newData)
   };
 
   const removeExpense = (name: string) => {
@@ -144,18 +161,18 @@ function App() {
                 <label>Balance goal</label>
                 <div>
                   <span>$</span>
-                  <input type="number" step=".01" required />
+                  <input type="number" step=".01" required value={goalBalance} onInput={e => setGoalBalance((e.target as any).value)} />
                 </div>
               </label>
               <label className="field">
                 <label>I want to acheive this in...</label>
                 <div>
-                  <input type="number" step="any" required />
+                  <input type="number" step="any" required value={goalTimeframe} onInput={e => setGoalTimeframe((e.target as any).value)} />
                   <span>years</span>
                 </div>
               </label>
 
-              <button type="submit" className="cta button" style={{ float: 'right', marginTop: 4 }}>
+              <button type="submit" className="cta button" style={{ float: 'right', marginTop: 4 }} onClick={saveGeneral}>
                 <span>Save</span>
               </button>
             </form>
