@@ -312,11 +312,11 @@ function App() {
                     </td>
                     <td>
                       {currencyFormat.format(
-                        Object.values(expenses)
+                        Object.values(expenses).length > 0 ? Object.values(expenses)
                           .map(x => +x)
                           .reduce(
                             (reducer: number, x: number) => reducer + x
-                          )
+                          ) : 0
                       )} total
                     </td>
                     <td />
