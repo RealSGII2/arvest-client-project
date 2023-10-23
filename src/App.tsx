@@ -305,19 +305,23 @@ function App() {
                     </div>
                   </td>
                 </tbody>
-                {/* <tfoot>
+                <tfoot>
                   <tr>
                     <td>
-                      <input type="text" placeholder="Add an expense..." />
+                      {Object.keys(expenses).length} total
                     </td>
                     <td>
-                      <input type="text" placeholder="Amount" />
+                      {currencyFormat.format(
+                        Object.values(expenses)
+                          .map(x => +x)
+                          .reduce(
+                            (reducer: number, x: number) => reducer + x
+                          )
+                      )} total
                     </td>
-                    <td>
-                      <button className="cta button">Add</button>
-                    </td>
+                    <td />
                   </tr>
-                </tfoot> */}
+                </tfoot>
               </table>
             </div>
           </Tabs.Content>
